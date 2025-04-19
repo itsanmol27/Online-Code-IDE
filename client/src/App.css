@@ -1,0 +1,19 @@
+*{
+    margin: 0;
+    padding: auto;
+    box-sizing: border-box;
+}
+.playground-container{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+.container{
+    display: flex;
+    height: 100%;
+}
+
+.terminal-container{
+    
+}
