@@ -2,6 +2,7 @@ import http from "http"
 import express from "express"
 import { Server as SocketServer } from "socket.io"
 import pty from "node-pty"
+import generateFileTree from "./utils/generateFileTree.js";
 
 const app = express();
 const server = http.createServer(app);
@@ -11,6 +12,8 @@ const io = new SocketServer({
         methods: ["GET", "POST"]
     }
 })
+
+app.use(express.json());
 
 const ptyProcess = new pty.spawn("bash", [], {
     name: 'xterm-color',
@@ -37,6 +40,12 @@ io.on("connection", (socket) => {
         ptyProcess.write(`${data}`);
     })
 
+})
+
+app.post("/files", async (req, res) => {
+    const { directory } = req.body;
+    const files = await generateFileTree(directory);
+    return res.json(files);
 })
 
 server.listen(4000, () => {
