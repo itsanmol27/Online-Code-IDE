@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import socket from "../utils/socket";
 
 type FileTreeType = {
     [key: string]: FileTreeType | null;
@@ -10,6 +11,12 @@ const FileTree = () => {
 
     useEffect(() => {
         getFileTree();
+        socket.on("file:changed", getFileTree)
+
+        return () => {
+            socket.off('file:changed');
+        }
+
     }, []);
 
     async function getFileTree() {

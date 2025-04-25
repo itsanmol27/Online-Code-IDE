@@ -4,6 +4,7 @@ import { Server as SocketServer } from "socket.io"
 import pty from "node-pty"
 import generateFileTree from "./utils/generateFileTree.js";
 import cors from "cors"
+import chokidar from "chokidar"
 
 const app = express();
 const server = http.createServer(app);
@@ -31,6 +32,11 @@ ptyProcess.onData(data => {
     console.log(data);
     io.emit("terminal:output", data);
 
+})
+
+chokidar.watch("./user").on('all', (event , path) => {
+    console.log(event, path);
+    io.emit("file:changed", path);
 })
 
 io.on("connection", (socket) => {
