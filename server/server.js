@@ -5,6 +5,7 @@ import pty from "node-pty"
 import generateFileTree from "./utils/generateFileTree.js";
 import cors from "cors"
 import chokidar from "chokidar"
+import fs from "node:fs"
 
 const app = express();
 const server = http.createServer(app);
@@ -46,6 +47,16 @@ io.on("connection", (socket) => {
 
     socket.on("terminal:input", (data) => {
         ptyProcess.write(`${data}`);
+    })
+
+    socket.on("fetch:file", (path) => {
+        const data = fs.readFileSync(path);
+        socket.emit("fetch:file" , {data:data.toString() , path})
+    })
+
+    socket.on("file:append", (data) => {
+        const res = fs.writeFileSync(data.path, data.data);
+        console.log(data);
     })
 
 })

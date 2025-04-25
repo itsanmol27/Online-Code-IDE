@@ -13,10 +13,6 @@ const FileTree = () => {
         getFileTree();
         socket.on("file:changed", getFileTree);
 
-        return () => {
-            socket.off('file:changed');
-        }
-
     }, []);
 
     async function getFileTree() {
