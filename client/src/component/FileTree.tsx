@@ -11,7 +11,7 @@ const FileTree = () => {
 
     useEffect(() => {
         getFileTree();
-        socket.on("file:changed", getFileTree)
+        socket.on("file:changed", getFileTree);
 
         return () => {
             socket.off('file:changed');
@@ -29,24 +29,30 @@ const FileTree = () => {
         }
     }
 
-    const renderTree = (tree: FileTreeType, depth = 0) => {
+    async function fetchFile(path: string) {
+        console.log(path);
+        socket.emit("fetch:file", path);
+    }
+
+    const renderTree = (tree: FileTreeType, depth = 0, currentPath = "") => {
         if (!tree) return null;
 
         return Object.entries(tree).map(([name, children]) => {
             const isDirectory = children !== null && typeof children === 'object';
+            const fullPath = `${currentPath}/${name}`;
             const paddingLeft = `${depth * 15}px`;
 
             return (
-                <div key={name} style={{ paddingLeft }}>
+                <div key={fullPath} style={{ paddingLeft }}>
                     {isDirectory ? (
                         <details>
                             <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>
                                 📁 {name}
                             </summary>
-                            {renderTree(children, depth + 1)}
+                            {renderTree(children, depth + 1, fullPath)}
                         </details>
                     ) : (
-                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                        <div className=" cursor-pointer" onClick={() => { fetchFile(fullPath) }} style={{ display: 'flex', alignItems: 'center' }}>
                             📄 {name}
                         </div>
                     )}
@@ -59,7 +65,7 @@ const FileTree = () => {
         <div className="text-white w-full h-full p-4 overflow-y-scroll">
             {fileTree ? (
                 <div className="file-tree">
-                    {renderTree(fileTree)}
+                    {renderTree(fileTree, 0, ".")}
                 </div>
             ) : (
                 <div>Loading file tree...</div>

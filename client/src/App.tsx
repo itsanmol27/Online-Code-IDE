@@ -1,4 +1,5 @@
 import './App.css'
+import CodeEditor from './component/CodeEditor'
 import FileTree from './component/FileTree'
 import Terminal from './component/Terminal'
 
@@ -11,7 +12,7 @@ function App() {
           <FileTree />
         </div>
         <div className=' w-full h-full bg-gray-900 text-white'>
-
+          <CodeEditor />
         </div>
       </div>
       <div className=''>
