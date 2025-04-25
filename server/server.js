@@ -3,6 +3,7 @@ import express from "express"
 import { Server as SocketServer } from "socket.io"
 import pty from "node-pty"
 import generateFileTree from "./utils/generateFileTree.js";
+import cors from "cors"
 
 const app = express();
 const server = http.createServer(app);
@@ -14,6 +15,7 @@ const io = new SocketServer({
 })
 
 app.use(express.json());
+app.use(cors());
 
 const ptyProcess = new pty.spawn("bash", [], {
     name: 'xterm-color',

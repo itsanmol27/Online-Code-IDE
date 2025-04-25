@@ -1,7 +1,7 @@
 import { Terminal as XTerminal } from "@xterm/xterm"
 import { useEffect, useRef } from "react"
 import "@xterm/xterm/css/xterm.css"
-import socket from "./socket"
+import socket from "../utils/socket"
 
 const Terminal = () => {
 
